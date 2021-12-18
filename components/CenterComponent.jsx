@@ -22,7 +22,7 @@ const CenterComponent = () => {
     setColor(shuffle(colors).pop());
   }, []);
 
-  console.log(session);
+  //console.log(session);
   return (
     <div className="flex-grow">
       <header className="absolute top-5 right-8">

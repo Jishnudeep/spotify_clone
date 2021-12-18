@@ -7,11 +7,23 @@ import {
   RssIcon,
 } from "@heroicons/react/outline";
 import { signOut, useSession } from "next-auth/react";
+import { useState, useEffect } from "react";
+import useSpotify from "../hooks/useSpotify";
 
 const Sidebar = () => {
+  const spotifyAPI = useSpotify();
   const { data: session, status } = useSession();
-  // console.log(session);
+  const [playlists, setPlaylists] = useState([]);
 
+  useEffect(() => {
+    if (spotifyAPI.getAccessToken()) {
+      spotifyAPI.getUserPlaylists().then((data) => {
+        setPlaylists(data.body.items);
+      });
+    }
+  }, [session, spotifyAPI]);
+  //  console.log(playlists);
+  // console.log(session);
   return (
     <div className="text-gray-500 p-5 text-sm border-r border-gray-900 overflow-y-scroll scrollbar-hide h-screen">
       <div className="space-y-4">
