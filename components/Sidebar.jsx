@@ -14,6 +14,7 @@ const Sidebar = () => {
   const spotifyAPI = useSpotify();
   const { data: session, status } = useSession();
   const [playlists, setPlaylists] = useState([]);
+  const [playlistId, setPlaylistId] = useState(null);
 
   useEffect(() => {
     if (spotifyAPI.getAccessToken()) {
@@ -46,7 +47,6 @@ const Sidebar = () => {
           <p>Your Library</p>
         </button>
         <hr className="border-t-[0.1px] border-gray-900" />
-
         <button className="flex items-center space-x-2 hover:text-white">
           <PlusCircleIcon className="h-5 w-5" />
           <p>Create Playlist</p>
@@ -60,14 +60,16 @@ const Sidebar = () => {
           <p>Your Episodes</p>
         </button>
         <hr className="border-t-[0.1px] border-gray-900" />
-
         {/* <Playlists /> */}
-        <p className="cursor-pointer hover:text-white ">PlayList Name</p>
-        <p className="cursor-pointer hover:text-white ">PlayList Name</p>
-        <p className="cursor-pointer hover:text-white ">PlayList Name</p>
-        <p className="cursor-pointer hover:text-white ">PlayList Name</p>
-        <p className="cursor-pointer hover:text-white ">PlayList Name</p>
-        <p className="cursor-pointer hover:text-white ">PlayList Name</p>
+        {playlists.map((playlist) => (
+          <p
+            key={playlist.id}
+            onClick={() => setPlaylistId(playlist.id)}
+            className="cursor-pointer hover:text-white "
+          >
+            {playlist.name}
+          </p>
+        ))}
       </div>
     </div>
   );
