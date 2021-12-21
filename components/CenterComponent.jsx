@@ -42,7 +42,7 @@ const CenterComponent = () => {
 
   // console.log(session);
   return (
-    <div className="flex-grow">
+    <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide">
       <header className="absolute top-5 right-8">
         <div
           className="flex items-center text-white

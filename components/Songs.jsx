@@ -2,25 +2,17 @@ import { useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { playlistIdState, playlistState } from "../atoms/playlistAtom";
 import useSpotify from "../hooks/useSpotify";
+import Song from "./Song";
 
 const Songs = () => {
   const playlistId = useRecoilValue(playlistIdState);
-  const [playlist, setPlaylist] = useRecoilState(playlistState);
-  const spotifyAPI = useSpotify();
-  useEffect(() => {
-    spotifyAPI
-      .getPlaylist(playlistId)
-      .then((data) => {
-        setPlaylist(data.body);
-      })
-      .catch((err) => console.log("Something went wrong", err));
-  }, [spotifyAPI, playlistId]);
+  const playlist = useRecoilValue(playlistState);
 
-  console.log(playlist);
   return (
-    <div className="text-white">
-      {playlist?.tracks?.items?.map((items) => (
-        <p key={items.track.id}>{items.track.name}</p>
+    <div className="px-8 flex flex-col space-y-1 pb-28 text-white">
+      {playlist?.tracks?.items?.map((items, index) => (
+        // <<div key={items.track.id}>{items.track.name}</div>>
+        <Song key={items.track.id} order={index} track={items} />
       ))}
     </div>
   );
