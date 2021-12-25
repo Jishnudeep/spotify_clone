@@ -4,7 +4,19 @@ import { useRecoilState } from "recoil";
 import { currentTrackIdState, isPlayingState } from "../atoms/songAtom";
 import useSongInfo from "../hooks/useSongInfo";
 import useSpotify from "../hooks/useSpotify";
-import { SwitchHorizontalIcon } from "@heroicons/react/outline";
+import {
+  SwitchHorizontalIcon,
+  HeartIcon,
+  VolumeUpIcon as VolumeDownIcon,
+} from "@heroicons/react/outline";
+import {
+  RewindIcon,
+  FastForwardIcon,
+  PlayIcon,
+  PauseIcon,
+  ReplyIcon,
+  VolumeUpIcon,
+} from "@heroicons/react/solid";
 
 const Player = () => {
   const spotifyAPI = useSpotify();
@@ -27,6 +39,19 @@ const Player = () => {
       });
     }
   };
+
+  const handlePlayPause = () => {
+    spotifyAPI.getMyCurrentPlaybackState().then((data) => {
+      if (data?.body?.is_playing) {
+        spotifyAPI.pause();
+        setIsPlaying(false);
+      } else {
+        spotifyAPI.play();
+        setIsPlaying(true);
+      }
+    });
+  };
+  // console.log(isPlaying);
 
   useEffect(() => {
     if (spotifyAPI.getAccessToken() && !currentTrackId) {
@@ -55,8 +80,20 @@ const Player = () => {
       </div>
 
       {/*Center Section */}
-      <div>
+      <div className="flex items-center justify-evenly">
         <SwitchHorizontalIcon className="button" />
+        <RewindIcon // onClick={() => spotifyAPI.skipToPrevious()}} - The API is not working
+          className="button"
+        />
+        {isPlaying ? (
+          <PauseIcon onClick={handlePlayPause} className="button w-10 h-10" />
+        ) : (
+          <PlayIcon onClick={handlePlayPause} className="button w-10 h-10" />
+        )}
+        <FastForwardIcon // onClick = {() => spotifyAPI.skipToNext()}
+          className="button"
+        />
+        <ReplyIcon className="button" />
       </div>
     </div>
   );
