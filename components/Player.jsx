@@ -1,5 +1,5 @@
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { currentTrackIdState, isPlayingState } from "../atoms/songAtom";
 import useSongInfo from "../hooks/useSongInfo";
@@ -17,6 +17,7 @@ import {
   ReplyIcon,
   VolumeUpIcon,
 } from "@heroicons/react/solid";
+import { debounce } from "lodash";
 
 const Player = () => {
   const spotifyAPI = useSpotify();
@@ -51,6 +52,13 @@ const Player = () => {
       }
     });
   };
+
+  const debouncedAdjustVolume = useCallback(
+    debounce((volume) => {
+      spotifyAPI.setVolume(volume).catch((err) => console.log(err));
+    }, 500),
+    []
+  );
   // console.log(isPlaying);
 
   useEffect(() => {
@@ -60,6 +68,13 @@ const Player = () => {
       setVolume(50);
     }
   }, [currentTrackId, spotifyAPI, session]);
+
+  useEffect(() => {
+    if (volume > 0 && volume < 100) {
+      console.log(volume);
+      debouncedAdjustVolume(volume);
+    }
+  }, [volume]);
 
   return (
     <div
@@ -94,6 +109,26 @@ const Player = () => {
           className="button"
         />
         <ReplyIcon className="button" />
+      </div>
+
+      {/*Right Side Volume Controls*/}
+      <div className="flex items-center space-x-3 pr-5 md:space-x-4 justify-end">
+        <VolumeDownIcon
+          onClick={() => volume > 0 && setVolume(volume - 10)}
+          className="button"
+        />
+        <input
+          className="w-14 md:w-28"
+          type="range"
+          value={volume}
+          onChange={(e) => setVolume(Number(e.target.value))}
+          min={0}
+          max={100}
+        />
+        <VolumeUpIcon
+          onClick={() => volume < 100 && setVolume(volume + 10)}
+          className="button"
+        />
       </div>
     </div>
   );
