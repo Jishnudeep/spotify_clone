@@ -10,7 +10,7 @@ export async function middleware(req) {
   // if Token exists
   // its a request for next-auth session and provider fetching
   if (pathname.includes("/api/auth") || token) {
-    return NextResponse.next();
+    return NextResponse.next("/");
   }
 
   //Redirect them to login if they do not have token AND are
