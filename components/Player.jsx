@@ -71,7 +71,6 @@ const Player = () => {
 
   useEffect(() => {
     if (volume > 0 && volume < 100) {
-      console.log(volume);
       debouncedAdjustVolume(volume);
     }
   }, [volume]);
